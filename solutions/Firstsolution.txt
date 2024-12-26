@@ -1,1 +1,28 @@
-Currently thinking about this problem
+In contemplating this problem, I explored several strategies. One possibility was to rotate the cups so that each guest would drink 2/N of the water. Another approach involved pouring water into the first and last cups and having guests drink from and pass the cups to the next person. However, all of these strategies have a common drawback: the risk of encountering a deadlock.
+
+I also considered organizing a physical competition, such as a race, to see who could place their cups first or last. However, this method might be unfair to older participants and could still result in another deadlock, such as guests declining to place their cups in the middle.
+
+This prompted me to develop a solution that encourages participation while maintaining fairness. The core idea is to provide every guest with an equal opportunity to win through a randomized mechanism. Individuals often hesitate to engage in games when they perceive their chances of winning as disproportionately low. By employing randomization, this concern is effectively addressed.
+
+**Game Rules:**
+
+1. **Cup Placement:** Each guest places their cup on the table in a row, and the arrangement of the cups is inconsequential.
+   
+2. **Isolation:** After being assigned their room numbers, each guest is sent to a separate room, where they cannot communicate with or hear one another during the game.
+
+3. **Coin Flip Rounds:** The game consists of several rounds in which guests must guess the outcome of a coin flip (either heads or tails). Guests have the option to choose heads or tails, and if a guest declines to make a choice, a coin will be flipped randomly on their behalf.
+
+4. **Selecting a Winner:** Each round comprises multiple coin flips, ultimately resulting in a single winner. This winner then selects a random number, which is processed through a blockchain-based randomization function. The use of blockchain ensures transparency, immutability, and fairness, preventing guests from targeting one another. Additionally, there is a possibility that the winners may eliminate themselves.
+
+    The randomization function is as follows:
+    ```solidity
+    uint entropy = uint(keccak256(abi.encodePacked(block.timestamp, block.prevrandao, msg.sender)));
+    return uint(keccak256(abi.encodePacked(input, entropy))) % N;
+    ```
+   Here, `input` is the winner’s answer, and `N` is the total number of guests plus one.
+
+5. **Eliminated Guests:** When a guest is eliminated, they remain unaware of their removal from the game. This introduces a psychological layer of uncertainty, ensuring that all participants stay engaged and invested in the outcome.
+
+The game continues until two winners are identified. These two individuals then exit their rooms and, by the game’s rules, drink from the two cups of water. This approach honors human nature by guaranteeing that every participant has an equal opportunity to succeed while preventing anyone from feeling excluded or unfairly treated.
+
+This solution not only upholds the principles of fairness and psychological engagement but also leverages the strengths of blockchain technology—transparency, security, and decentralization—fostering trust among all participants and maintaining an enjoyable and equitable gaming experience.
